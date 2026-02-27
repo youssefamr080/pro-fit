@@ -95,7 +95,7 @@ export default function AddressStep({ form, setForm, isAddressChanged, addressMo
                 </div>
 
                 {/* Shipping cost preview */}
-                {selectedRate && (
+                {selectedRate ? (
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
@@ -107,7 +107,7 @@ export default function AddressStep({ form, setForm, isAddressChanged, addressMo
                             {selectedRate.delivery_days && ` — ${selectedRate.delivery_days}`}
                         </span>
                     </motion.div>
-                )}
+                ) : null}
             </div>
 
             {/* Address field */}
@@ -129,7 +129,7 @@ export default function AddressStep({ form, setForm, isAddressChanged, addressMo
                 </label>
             </div>
 
-            {isAddressChanged && (
+            {isAddressChanged ? (
                 <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
@@ -156,7 +156,7 @@ export default function AddressStep({ form, setForm, isAddressChanged, addressMo
                         </label>
                     </div>
                 </motion.div>
-            )}
+            ) : null}
 
             <div className="relative group mt-2 pt-2">
                 <textarea

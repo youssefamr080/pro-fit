@@ -23,7 +23,7 @@ export default function ScrollToTop() {
 
     return (
         <AnimatePresence>
-            {visible && (
+            {visible ? (
                 <motion.button
                     initial={{ opacity: 0, scale: 0, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -35,7 +35,7 @@ export default function ScrollToTop() {
                 >
                     <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
                 </motion.button>
-            )}
+            ) : null}
         </AnimatePresence>
     );
 }

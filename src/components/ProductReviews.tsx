@@ -103,7 +103,7 @@ export default function ProductReviews({ productId }: Props) {
             {/* Header with average */}
             <div className="flex items-center justify-between">
                 <p className="text-sm font-bold font-cairo">التقييمات والمراجعات</p>
-                {avgRating && (
+                {avgRating ? (
                     <div className="flex items-center gap-1.5">
                         <div className="flex">
                             {[1, 2, 3, 4, 5].map(i => (
@@ -113,7 +113,7 @@ export default function ProductReviews({ productId }: Props) {
                         <span className="text-xs font-bold">{avgRating}</span>
                         <span className="text-[10px] text-muted-foreground">({reviews.length})</span>
                     </div>
-                )}
+                ) : null}
             </div>
 
             {/* Write review form */}
@@ -159,7 +159,7 @@ export default function ProductReviews({ productId }: Props) {
                             {submitting ? "جاري الإرسال..." : "إرسال التقييم"}
                         </motion.button>
                         <AnimatePresence>
-                            {submitted && (
+                            {submitted ? (
                                 <motion.span
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
@@ -168,7 +168,7 @@ export default function ProductReviews({ productId }: Props) {
                                 >
                                     ✓ تم إرسال تقييمك
                                 </motion.span>
-                            )}
+                            ) : null}
                         </AnimatePresence>
                     </div>
                 </motion.div>
@@ -218,9 +218,9 @@ export default function ProductReviews({ productId }: Props) {
                                     <Star key={i} className="h-3 w-3" fill={i <= review.rating ? "currentColor" : "none"} style={{ color: i <= review.rating ? "#f59e0b" : "#d1d5db" }} />
                                 ))}
                             </div>
-                            {review.comment && (
+                            {review.comment ? (
                                 <p className="text-xs text-muted-foreground font-cairo leading-relaxed">{review.comment}</p>
-                            )}
+                            ) : null}
                         </motion.div>
                     ))}
                 </div>

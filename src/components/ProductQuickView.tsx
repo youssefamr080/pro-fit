@@ -56,11 +56,11 @@ export default function ProductQuickView({ product, onClose }: Props) {
                             alt={product.title}
                             className="w-full h-full object-cover"
                         />
-                        {discount > 0 && (
+                        {discount > 0 ? (
                             <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                                 -{discount}%
                             </span>
-                        )}
+                        ) : null}
                         <button
                             onClick={onClose}
                             className="absolute top-3 left-3 bg-background/80 backdrop-blur-sm p-1.5 rounded-full hover:bg-background transition-colors"
@@ -80,21 +80,21 @@ export default function ProductQuickView({ product, onClose }: Props) {
                             <span className="text-xl font-black">
                                 {flashSale?.flash_price ?? product.sale_price ?? product.price} ج.م
                             </span>
-                            {(flashSale || product.sale_price) && (
+                            {(flashSale || product.sale_price) ? (
                                 <span className="text-sm text-muted-foreground line-through">
                                     {product.price} ج.م
                                 </span>
-                            )}
+                            ) : null}
                         </div>
 
-                        {product.description && (
+                        {product.description ? (
                             <p className="text-sm text-muted-foreground line-clamp-3">
                                 {product.description}
                             </p>
-                        )}
+                        ) : null}
 
                         {/* Sizes */}
-                        {sizes.length > 0 && (
+                        {sizes.length > 0 ? (
                             <div>
                                 <p className="text-xs font-bold text-muted-foreground mb-2">المقاس</p>
                                 <div className="flex flex-wrap gap-1.5">
@@ -109,10 +109,10 @@ export default function ProductQuickView({ product, onClose }: Props) {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
 
                         {/* Colors */}
-                        {colors.length > 0 && (
+                        {colors.length > 0 ? (
                             <div>
                                 <p className="text-xs font-bold text-muted-foreground mb-2">اللون</p>
                                 <div className="flex flex-wrap gap-1.5">
@@ -127,7 +127,7 @@ export default function ProductQuickView({ product, onClose }: Props) {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
 
                         {/* Actions */}
                         <div className="flex gap-2 mt-auto pt-3">

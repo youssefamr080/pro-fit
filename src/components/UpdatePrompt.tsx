@@ -72,7 +72,7 @@ export default function UpdatePrompt() {
 
     return (
         <AnimatePresence>
-            {showUpdatePrompt && (
+            {showUpdatePrompt ? (
                 <motion.div
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -98,7 +98,7 @@ export default function UpdatePrompt() {
                         تحديث الآن
                     </button>
                 </motion.div>
-            )}
+            ) : null}
         </AnimatePresence>
     );
 }

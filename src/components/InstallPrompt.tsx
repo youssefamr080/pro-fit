@@ -79,7 +79,7 @@ export default function InstallPrompt() {
 
     return (
         <AnimatePresence>
-            {showPrompt && deferredPrompt && (
+            {showPrompt && deferredPrompt ? (
                 <motion.div
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -109,7 +109,7 @@ export default function InstallPrompt() {
                         تثبيت التطبيق
                     </button>
                 </motion.div>
-            )}
+            ) : null}
         </AnimatePresence>
     );
 }

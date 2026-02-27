@@ -188,29 +188,29 @@ export default function ImageLightbox({ images, initialIndex = 0, alt = "", onCl
                 </div>
 
                 {/* Navigation arrows (desktop) */}
-                {images.length > 1 && (
+                {images.length > 1 ? (
                     <>
-                        {currentIndex > 0 && (
+                        {currentIndex > 0 ? (
                             <button
                                 onClick={goPrev}
                                 className="absolute left-4 top-1/2 -translate-y-1/2 hidden md:flex w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full items-center justify-center text-white transition-colors"
                             >
                                 <ChevronLeft className="h-6 w-6" />
                             </button>
-                        )}
-                        {currentIndex < images.length - 1 && (
+                        ) : null}
+                        {currentIndex < images.length - 1 ? (
                             <button
                                 onClick={goNext}
                                 className="absolute right-4 top-1/2 -translate-y-1/2 hidden md:flex w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full items-center justify-center text-white transition-colors"
                             >
                                 <ChevronRight className="h-6 w-6" />
                             </button>
-                        )}
+                        ) : null}
                     </>
-                )}
+                ) : null}
 
                 {/* Thumbnail strip */}
-                {images.length > 1 && (
+                {images.length > 1 ? (
                     <div className="flex justify-center gap-2 p-4">
                         {images.map((img, i) => (
                             <button
@@ -222,7 +222,7 @@ export default function ImageLightbox({ images, initialIndex = 0, alt = "", onCl
                             </button>
                         ))}
                     </div>
-                )}
+                ) : null}
             </motion.div>
         </AnimatePresence>,
         document.body

@@ -108,7 +108,7 @@ export default function PaymentStep({
 
             {/* InstaPay details */}
             <AnimatePresence>
-                {payMethod === "instapay" && (
+                {payMethod === "instapay" ? (
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
@@ -171,7 +171,7 @@ export default function PaymentStep({
                             أرسل إيصال الدفع على واتساب
                         </motion.button>
                     </motion.div>
-                )}
+                ) : null}
             </AnimatePresence>
 
             {/* Coupon Section */}
@@ -206,13 +206,13 @@ export default function PaymentStep({
                                 {couponLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "تطبيق"}
                             </motion.button>
                         </div>
-                        {couponError && <p className="text-xs text-destructive font-bold">{couponError}</p>}
+                        {couponError ? <p className="text-xs text-destructive font-bold">{couponError}</p> : null}
                     </>
                 )}
             </div>
 
             {/* Loyalty Points Section */}
-            {settings?.active && hasCustomer && (
+            {settings?.active && hasCustomer ? (
                 <div className={`mb-6 border p-4 space-y-3 transition-colors ${usePoints
                     ? "border-amber-300 dark:border-amber-700 bg-amber-50/60 dark:bg-amber-950/20"
                     : "border-border"
@@ -249,15 +249,15 @@ export default function PaymentStep({
                                         ? "border-amber-500 bg-amber-500 text-white"
                                         : "border-muted-foreground/40"
                                         }`}>
-                                        {usePoints && (
+                                        {usePoints ? (
                                             <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-xs">✓</motion.span>
-                                        )}
+                                        ) : null}
                                     </div>
                                     <span className="text-sm font-bold">
                                         {usePoints ? "نقاطك مفعّلة" : "استخدم نقاطك كخصم"}
                                     </span>
                                 </div>
-                                {usePoints && (
+                                {usePoints ? (
                                     <motion.span
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={{ opacity: 1, scale: 1 }}
@@ -265,11 +265,11 @@ export default function PaymentStep({
                                     >
                                         −{getDiscountForPoints(pointsToRedeem)} ج.م
                                     </motion.span>
-                                )}
+                                ) : null}
                             </button>
 
                             <AnimatePresence>
-                                {usePoints && (
+                                {usePoints ? (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: "auto" }}
@@ -309,7 +309,7 @@ export default function PaymentStep({
                                             </span>
                                         </motion.div>
                                     </motion.div>
-                                )}
+                                ) : null}
                             </AnimatePresence>
                         </>
                     ) : (
@@ -318,7 +318,7 @@ export default function PaymentStep({
                         </p>
                     )}
                 </div>
-            )}
+            ) : null}
 
             <button onClick={onNext} className="w-full bg-foreground text-background py-3.5 font-bold text-sm">
                 التالي — مراجعة الطلب

@@ -70,15 +70,15 @@ export default function ConfirmStep({
                 <div className="flex justify-between"><span className="text-muted-foreground">المدينة</span><span className="font-bold">{form.city}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">العنوان</span><span className="font-bold">{form.address}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">الدفع</span><span className="font-bold">{PAYMENT_LABELS[payMethod] || payMethod}</span></div>
-                {isAddressChanged && (
+                {isAddressChanged ? (
                     <div className="flex justify-between text-xs">
                         <span className="text-orange-500">تغيير العنوان</span>
                         <span className="font-bold text-orange-500">{addressMode === "permanent" ? "دائم" : "لهذا الطلب فقط"}</span>
                     </div>
-                )}
+                ) : null}
                 <div className="border-t border-border pt-2 mt-2 space-y-1">
                     <div className="flex justify-between"><span className="text-muted-foreground">المجموع</span><span className="font-bold">{totalPrice} ج.م</span></div>
-                    {shippingCost > 0 && (
+                    {shippingCost > 0 ? (
                         <div className="flex justify-between text-blue-600 dark:text-blue-400">
                             <span className="text-xs flex items-center gap-1">
                                 <Truck className="h-3 w-3" />
@@ -86,14 +86,14 @@ export default function ConfirmStep({
                             </span>
                             <span className="font-bold">+{shippingCost} ج.م</span>
                         </div>
-                    )}
-                    {appliedCoupon && (
+                    ) : null}
+                    {appliedCoupon ? (
                         <div className="flex justify-between text-green-600">
                             <span className="text-xs">خصم ({appliedCoupon.code})</span>
                             <span className="font-bold">-{discountAmount} ج.م</span>
                         </div>
-                    )}
-                    {usePoints && loyaltyDiscount > 0 && (
+                    ) : null}
+                    {usePoints && loyaltyDiscount > 0 ? (
                         <div className="flex justify-between text-amber-600 dark:text-amber-400">
                             <span className="text-xs flex items-center gap-1">
                                 <Gift className="h-3 w-3" />
@@ -101,7 +101,7 @@ export default function ConfirmStep({
                             </span>
                             <span className="font-bold">-{loyaltyDiscount} ج.م</span>
                         </div>
-                    )}
+                    ) : null}
                     <div className="flex justify-between"><span className="font-black">الإجمالي</span><span className="font-black text-lg">{finalPrice} ج.م</span></div>
                 </div>
             </div>

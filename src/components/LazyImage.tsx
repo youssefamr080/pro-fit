@@ -61,24 +61,24 @@ function LazyImageInner({
             onClick={onClick}
         >
             {/* Shimmer placeholder */}
-            {!loaded && (
+            {!loaded ? (
                 <div className="absolute inset-0 bg-secondary">
                     <div className="absolute inset-0 shimmer-placeholder" />
                 </div>
-            )}
+            ) : null}
 
             {/* Error state */}
-            {error && (
+            {error ? (
                 <div className="absolute inset-0 bg-secondary flex items-center justify-center">
                     <div className="text-center">
                         <span className="text-2xl block mb-1">📷</span>
                         <span className="text-[10px] text-muted-foreground">تعذّر تحميل الصورة</span>
                     </div>
                 </div>
-            )}
+            ) : null}
 
             {/* Actual image */}
-            {inView && !error && (
+            {inView && !error ? (
                 <motion.img
                     src={src}
                     alt={alt}
@@ -92,7 +92,7 @@ function LazyImageInner({
                     className={`w-full h-full`}
                     style={{ objectFit }}
                 />
-            )}
+            ) : null}
         </div>
     );
 }

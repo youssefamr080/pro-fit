@@ -180,7 +180,7 @@ const ChartTooltipContent = React.forwardRef<
                                         {itemConfig?.icon ? (
                                             <itemConfig.icon />
                                         ) : (
-                                            !hideIndicator && (
+                                            !hideIndicator ? (
                                                 <div
                                                     className={cn("shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]", {
                                                         "h-2.5 w-2.5": indicator === "dot",
@@ -195,7 +195,7 @@ const ChartTooltipContent = React.forwardRef<
                                                         } as React.CSSProperties
                                                     }
                                                 />
-                                            )
+                                            ) : null
                                         )}
                                         <div
                                             className={cn(
@@ -207,11 +207,11 @@ const ChartTooltipContent = React.forwardRef<
                                                 {nestLabel ? tooltipLabel : null}
                                                 <span className="text-muted-foreground">{itemConfig?.label || item.name}</span>
                                             </div>
-                                            {item.value && (
+                                            {item.value || item.value === 0 ? (
                                                 <span className="font-mono font-medium tabular-nums text-foreground">
                                                     {item.value.toLocaleString()}
                                                 </span>
-                                            )}
+                                            ) : null}
                                         </div>
                                     </>
                                 )}

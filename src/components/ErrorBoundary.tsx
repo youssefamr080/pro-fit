@@ -57,13 +57,13 @@ export default class ErrorBoundary extends Component<Props, State> {
                             الرئيسية
                         </button>
                     </div>
-                    {process.env.NODE_ENV === "development" && this.state.error && (
+                    {process.env.NODE_ENV === "development" && this.state.error ? (
                         <pre className="mt-6 text-xs text-left bg-destructive/10 text-destructive p-4 max-w-lg overflow-auto rounded">
                             {this.state.error.message}
                             {"\n"}
                             {this.state.error.stack}
                         </pre>
-                    )}
+                    ) : null}
                 </div>
             );
         }
