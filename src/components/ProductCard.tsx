@@ -137,7 +137,7 @@ function ProductCardInner({ product, forceAspect }: Props) {
                     </div>
 
                     {/* Image dots */}
-                    {product.images.length > 1 && (
+                    {product.images.length > 1 ? (
                         <div className="absolute bottom-2 inset-x-0 flex justify-center gap-1">
                             {product.images.map((_, i) => (
                                 <motion.span
@@ -147,19 +147,19 @@ function ProductCardInner({ product, forceAspect }: Props) {
                                 />
                             ))}
                         </div>
-                    )}
+                    ) : null}
                 </div>
             </Link>
 
             <div className="p-2">
                 <p className="text-xs font-cairo font-bold truncate">{product.title}</p>
-                {avg !== null && (
+                {avg !== null ? (
                     <div className="flex items-center gap-1 mt-0.5">
                         <Star className="h-3 w-3" fill="currentColor" style={{ color: "#f59e0b" }} />
                         <span className="text-[10px] font-bold">{avg.toFixed(1)}</span>
                         <span className="text-[10px] text-muted-foreground">({reviewCount})</span>
                     </div>
-                )}
+                ) : null}
                 <div className="flex items-center gap-2 mt-0.5">
                     {flashSale ? (
                         <>
@@ -175,23 +175,23 @@ function ProductCardInner({ product, forceAspect }: Props) {
                             <span className="text-xs font-cairo font-bold">
                                 {flashSale?.flash_price ?? product.sale_price ?? product.price} ج.م
                             </span>
-                            {(flashSale || product.sale_price) && (
+                            {(flashSale || product.sale_price) ? (
                                 <span className="text-xs text-muted-foreground line-through">
                                     {product.price} ج.م
                                 </span>
-                            )}
+                            ) : null}
                         </>
                     )}
                 </div>
             </div>
 
             {/* Quick View modal (desktop only) — rendered via Portal to avoid Link interference */}
-            {showQuickView && createPortal(
+            {showQuickView ? createPortal(
                 <Suspense fallback={null}>
                     <ProductQuickView product={product} onClose={() => setShowQuickView(false)} />
                 </Suspense>,
                 document.body
-            )}
+            ) : null}
         </motion.div>
     );
 }

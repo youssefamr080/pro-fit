@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Package, ChevronLeft, ShoppingBag } from "lucide-react";
@@ -11,21 +11,19 @@ import { STATUS_MAP } from "@/types/order";
 
 export default function MyOrdersPage() {
     const { customer } = useCustomer();
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!customer) return;
-        (async () => {
+    const { data: orders = [], isLoading: loading } = useQuery({
+        queryKey: ["orders", customer?.id],
+        queryFn: async () => {
+            if (!customer) return [];
             const { data } = await supabase
                 .from("orders")
                 .select("*")
                 .eq("customer_id", customer.id)
                 .order("created_at", { ascending: false });
-            if (data) setOrders(data.map(o => ({ ...o, items: (o.items as unknown as OrderItem[]) || [] })));
-            setLoading(false);
-        })();
-    }, [customer]);
+            return (data || []).map(o => ({ ...o, items: (o.items as unknown as OrderItem[]) || [] })) as Order[];
+        },
+        enabled: !!customer,
+    });
 
     if (!customer) {
         return (
@@ -152,15 +150,15 @@ export default function MyOrdersPage() {
                                                     <span className="text-xs font-bold whitespace-nowrap">{item.price} ج.م</span>
                                                 </div>
                                             ))}
-                                            {parsedItems.length > 3 && (
+                                            {parsedItems.length > 3 ? (
                                                 <p className="text-[10px] text-muted-foreground">+{parsedItems.length - 3} منتجات أخرى</p>
-                                            )}
+                                            ) : null}
                                         </div>
 
                                         {/* Footer */}
                                         <div className="flex items-center justify-between pt-2 border-t border-border/50">
                                             <div className="text-xs text-muted-foreground">
-                                                {order.delivery_city && <span>{order.delivery_city} · </span>}
+                                                {order.delivery_city ? <span>{order.delivery_city} · </span> : null}
                                                 {order.payment_method === "cod" ? "دفع عند الاستلام" : order.payment_method}
                                             </div>
                                             <div className="flex items-center gap-2">

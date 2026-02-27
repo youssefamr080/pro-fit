@@ -37,7 +37,7 @@ export default function CartPage() {
                         </Link>
                     </motion.div>
 
-                    {recommended.length > 0 && (
+                    {recommended.length > 0 ? (
                         <div className="mt-16 w-full text-right">
                             <h2 className="text-lg font-black mb-4">قد يعجبك أيضاً</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -46,7 +46,7 @@ export default function CartPage() {
                                 ))}
                             </div>
                         </div>
-                    )}
+                    ) : null}
                 </div>
             </PageTransition>
         );

@@ -39,14 +39,14 @@ export default function LoyaltyPage() {
                         {points}
                     </motion.p>
                     <p className="text-xs text-muted-foreground mt-1">نقطة متاحة</p>
-                    {discount > 0 && (
+                    {discount > 0 ? (
                         <p className="text-sm text-green-600 font-bold mt-2">
                             يمكنك استبدالها بخصم {discount} ج.م
                         </p>
-                    )}
+                    ) : null}
                 </div>
 
-                {settings && (
+                {settings ? (
                     <div className="px-4 py-4 border-b border-border">
                         <h2 className="text-sm font-black mb-3">كيف تعمل النقاط؟</h2>
                         <div className="space-y-2 text-xs text-muted-foreground">
@@ -55,7 +55,7 @@ export default function LoyaltyPage() {
                             <p>• الحد الأدنى للاستبدال: <span className="font-bold text-foreground">{settings.min_points_redeem} نقطة</span></p>
                         </div>
                     </div>
-                )}
+                ) : null}
 
                 <div className="px-4 py-4">
                     <h2 className="text-sm font-black mb-3">سجل النقاط</h2>

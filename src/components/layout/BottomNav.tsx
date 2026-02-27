@@ -42,7 +42,7 @@ export default function BottomNav() {
                                     strokeWidth={active ? 2.5 : 1.5}
                                     fill={active && to === "/wishlist" ? "currentColor" : "none"}
                                 />
-                                {badge > 0 && (
+                                {badge > 0 ? (
                                     <motion.span
                                         key={badge}
                                         initial={{ scale: 0 }}
@@ -52,16 +52,16 @@ export default function BottomNav() {
                                     >
                                         {badge}
                                     </motion.span>
-                                )}
+                                ) : null}
                             </motion.span>
                             {label}
-                            {active && (
+                            {active ? (
                                 <motion.span
                                     layoutId="nav-indicator"
                                     className="absolute bottom-0 w-8 h-0.5 bg-foreground"
                                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                 />
-                            )}
+                            ) : null}
                         </Link>
                     );
                 })}

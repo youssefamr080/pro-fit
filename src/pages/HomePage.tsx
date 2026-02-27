@@ -57,11 +57,11 @@ export default function HomePage() {
             <SEO title="الرئيسية" description="PRO FIT — تسوق أفضل ملابس رجالي في مصر. بوكسرات، سويت شيرت، بناطيل، فانلات بأفضل الأسعار." />
 
             {/* Pull-to-refresh indicator */}
-            {isRefreshing && (
+            {isRefreshing ? (
                 <div className="flex justify-center py-3">
                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }} className="w-5 h-5 border-2 border-foreground border-t-transparent rounded-full" />
                 </div>
-            )}
+            ) : null}
 
             <div className="space-y-0">
 
@@ -80,7 +80,7 @@ export default function HomePage() {
                 {/* ═══════════════════════════════════
                     PREMIUM SALE BANNER
                 ═══════════════════════════════════ */}
-                {saleProducts.length > 0 && (
+                {saleProducts.length > 0 ? (
                     <div className="px-4 py-2 max-w-6xl mx-auto">
                         <Link to="/sales" className="block relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#1a2c2d] to-[#111a1b] shadow-2xl border border-white/5 group">
                             {/* Decorative background glow */}
@@ -113,7 +113,7 @@ export default function HomePage() {
                             </div>
                         </Link>
                     </div>
-                )}
+                ) : null}
 
                 {/* ═══════════════════════════════════
                     BEST SELLERS — Grid Layout
@@ -142,7 +142,7 @@ export default function HomePage() {
                 {/* ═══════════════════════════════════
                     SALE PRODUCTS — Horizontal Showcase
                 ═══════════════════════════════════ */}
-                {saleProducts.length > 0 && (
+                {saleProducts.length > 0 ? (
                     <section className="pb-8 max-w-6xl mx-auto">
                         <div className="flex items-center justify-between px-4 mb-4">
                             <motion.div
@@ -179,7 +179,7 @@ export default function HomePage() {
                             ))}
                         </div>
                     </section>
-                )}
+                ) : null}
 
                 {/* ═══════════════════════════════════
                     DIVIDER
@@ -234,7 +234,7 @@ export default function HomePage() {
                 {/* ═══════════════════════════════════
                     RECOMMENDATIONS — Deduplicated
                 ═══════════════════════════════════ */}
-                {dedupedRecommended.length > 0 && (
+                {dedupedRecommended.length > 0 ? (
                     <section className="py-6 max-w-6xl mx-auto">
                         <SectionHeader icon={<Sparkles className="h-5 w-5" />} title="مقترح لك" />
                         <div className="flex gap-[2px] overflow-x-auto pb-2 no-scrollbar px-1">
@@ -252,12 +252,12 @@ export default function HomePage() {
                             ))}
                         </div>
                     </section>
-                )}
+                ) : null}
 
                 {/* ═══════════════════════════════════
                     RECENTLY VIEWED
                 ═══════════════════════════════════ */}
-                {recents.length > 0 && (
+                {recents.length > 0 ? (
                     <section className="py-6 pb-10 max-w-6xl mx-auto">
                         <SectionHeader icon={<Clock className="h-5 w-5" />} title="شاهدت مؤخراً" />
                         <div className="flex gap-[2px] overflow-x-auto pb-2 no-scrollbar px-1">
@@ -275,7 +275,7 @@ export default function HomePage() {
                             ))}
                         </div>
                     </section>
-                )}
+                ) : null}
             </div>
         </PageTransition>
     );
@@ -297,7 +297,7 @@ function SectionHeader({ icon, title, badge }: { icon: React.ReactNode; title: s
                 <span className="text-foreground">{icon}</span>
             </span>
             <h2 className="text-lg font-black font-cairo">{title}</h2>
-            {badge && <span className="text-sm">{badge}</span>}
+            {badge ? <span className="text-sm">{badge}</span> : null}
         </motion.div>
     );
 }

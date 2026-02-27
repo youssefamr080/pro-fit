@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
@@ -21,6 +21,8 @@ const STEPS: { key: Step; label: string }[] = [
     { key: "payment", label: "الدفع" },
     { key: "confirm", label: "التأكيد" },
 ];
+
+const validatePhone = (phone: string) => /^01[0125][0-9]{8}$/.test(phone);
 
 interface AppliedCoupon {
     code: string;
@@ -73,16 +75,14 @@ export default function CheckoutPage() {
     const isAddressChanged = form.address !== customer.address || form.city !== (customer.city || "");
 
     // Calculate discounts + shipping
-    const shippingCost = getShippingCost(shippingRates, form.city);
-    const discountAmount = appliedCoupon
+    const shippingCost = useMemo(() => getShippingCost(shippingRates, form.city), [shippingRates, form.city]);
+    const discountAmount = useMemo(() => appliedCoupon
         ? appliedCoupon.discount_type === "percentage"
             ? Math.round(totalPrice * appliedCoupon.discount_value / 100)
             : Math.min(appliedCoupon.discount_value, totalPrice)
-        : 0;
-    const loyaltyDiscount = usePoints ? getDiscountForPoints(pointsToRedeem) : 0;
-    const finalPrice = totalPrice - discountAmount - loyaltyDiscount + shippingCost;
-
-    const validatePhone = (phone: string) => /^01[0125][0-9]{8}$/.test(phone);
+        : 0, [appliedCoupon, totalPrice]);
+    const loyaltyDiscount = useMemo(() => usePoints ? getDiscountForPoints(pointsToRedeem) : 0, [usePoints, pointsToRedeem, getDiscountForPoints]);
+    const finalPrice = useMemo(() => totalPrice - discountAmount - loyaltyDiscount + shippingCost, [totalPrice, discountAmount, loyaltyDiscount, shippingCost]);
 
     const applyCoupon = async () => {
         const code = couponCode.trim().toUpperCase();

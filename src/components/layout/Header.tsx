@@ -10,6 +10,8 @@ import { useTheme } from "@/hooks/useUX";
 import { useCategories } from "@/hooks/useCategories";
 import LazyImage from "@/components/LazyImage";
 
+const TRENDING_SEARCHES = ["سويت شيرت أوفر سايز", "بوكسر قطن", "شورت رياضي", "هودي"];
+
 export default function Header() {
     const navigate = useNavigate();
     const [searchOpen, setSearchOpen] = useState(false);
@@ -19,8 +21,6 @@ export default function Header() {
     const { isDark, toggle: toggleTheme } = useTheme();
     const { data: results = [] } = useHeaderSearch(query);
     const { data: categories = [] } = useCategories();
-
-    const TRENDING_SEARCHES = ["سويت شيرت أوفر سايز", "بوكسر قطن", "شورت رياضي", "هودي"];
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,7 +35,7 @@ export default function Header() {
         <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 border-b border-border shadow-sm">
             {/* Search overlay */}
             <AnimatePresence>
-                {searchOpen && (
+                {searchOpen ? (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -59,7 +59,7 @@ export default function Header() {
                             </button>
                         </form>
                         {/* Empty state: Trending Searches */}
-                        {query.trim() === "" && (
+                        {query.trim() === "" ? (
                             <div className="px-4 pb-4">
                                 <h3 className="text-xs font-bold text-muted-foreground mb-3">عمليات البحث الشائعة</h3>
                                 <div className="flex flex-wrap gap-2">
@@ -74,10 +74,10 @@ export default function Header() {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
 
                         {/* Search Results */}
-                        {results.length > 0 && (
+                        {results.length > 0 ? (
                             <div className="px-4 pb-4 space-y-3">
                                 <h3 className="text-xs font-bold text-muted-foreground mb-2">مقترحات</h3>
                                 {results.map((p) => (
@@ -88,7 +88,7 @@ export default function Header() {
                                         className="flex items-center gap-3 hover:bg-secondary p-2 -mx-2 rounded transition-colors"
                                     >
                                         <div className="w-10 h-10 bg-secondary rounded overflow-hidden flex-shrink-0">
-                                            {p.images?.[0] && <LazyImage src={p.images[0]} alt={p.title} className="w-full h-full object-cover" />}
+                                            {p.images?.[0] ? <LazyImage src={p.images[0]} alt={p.title} className="w-full h-full object-cover" /> : null}
                                         </div>
                                         <div className="flex-1">
                                             <div className="text-xs font-bold">{p.title}</div>
@@ -110,9 +110,9 @@ export default function Header() {
                                     عرض كل النتائج ←
                                 </button>
                             </div>
-                        )}
+                        ) : null}
                     </motion.div>
-                )}
+                ) : null}
             </AnimatePresence>
 
             <div className="flex items-center justify-between px-4 h-12">
@@ -137,11 +137,11 @@ export default function Header() {
                             <Link to="/cart" className="px-6 py-4 text-lg font-bold border-b border-border">السلة</Link>
                             <Link to="/compare" className="px-6 py-4 border-b border-border flex items-center justify-between">
                                 <span>مقارنة المنتجات</span>
-                                {compareCount > 0 && <span className="text-xs bg-foreground text-background px-2 py-0.5 rounded-full">{compareCount}</span>}
+                                {compareCount > 0 ? <span className="text-xs bg-foreground text-background px-2 py-0.5 rounded-full">{compareCount}</span> : null}
                             </Link>
                             <Link to="/notifications" className="px-6 py-4 border-b border-border flex items-center justify-between">
                                 <span>الإشعارات</span>
-                                {unreadCount > 0 && <span className="text-xs bg-foreground text-background px-2 py-0.5 rounded-full">{unreadCount}</span>}
+                                {unreadCount > 0 ? <span className="text-xs bg-foreground text-background px-2 py-0.5 rounded-full">{unreadCount}</span> : null}
                             </Link>
                         </nav>
                     </SheetContent>
@@ -161,11 +161,11 @@ export default function Header() {
                     <Link to="/notifications" className="relative">
                         <motion.span whileTap={{ scale: 0.9 }}>
                             <Bell className="h-5 w-5" />
-                            {unreadCount > 0 && (
+                            {unreadCount > 0 ? (
                                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-foreground text-background text-[9px] font-bold rounded-full flex items-center justify-center">
                                     {unreadCount}
                                 </span>
-                            )}
+                            ) : null}
                         </motion.span>
                     </Link>
                     {/* Search */}

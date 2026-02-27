@@ -8,6 +8,8 @@ import { User, Phone, MapPin, ChevronDown } from "lucide-react";
 import { useShippingRates } from "@/hooks/useShippingRates";
 import SEO from "@/components/SEO";
 
+const validatePhone = (phone: string) => /^01[0125][0-9]{8}$/.test(phone);
+
 export default function LoginPage() {
     const { login } = useCustomer();
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ export default function LoginPage() {
             toast({ title: "الاسم قصير جداً", description: "أدخل الاسم بالكامل (٣ حروف على الأقل)", variant: "destructive" });
             return;
         }
-        if (!/^01[0125][0-9]{8}$/.test(form.phone.trim())) {
+        if (!validatePhone(form.phone.trim())) {
             toast({ title: "رقم الهاتف غير صحيح", description: "أدخل رقم مصري صحيح (01XXXXXXXXX)", variant: "destructive" });
             return;
         }

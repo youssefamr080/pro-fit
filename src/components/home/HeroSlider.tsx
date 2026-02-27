@@ -40,7 +40,7 @@ export default function HeroSlider() {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
         >
-            {slide.image && (
+            {slide.image ? (
                 <>
                     <img
                         src={slide.image}
@@ -50,7 +50,7 @@ export default function HeroSlider() {
                     {/* Dark gradient overlay for text readability */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
                 </>
-            )}
+            ) : null}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 z-10">
                 <h1 className="text-5xl md:text-7xl font-black font-cairo text-white mb-4 leading-tight tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
                     {slide.title}
@@ -64,7 +64,7 @@ export default function HeroSlider() {
                 </Link>
             </div>
 
-            {slides.length > 1 && (
+            {slides.length > 1 ? (
                 <div className="absolute bottom-6 inset-x-0 flex justify-center gap-2">
                     {slides.map((_, i) => (
                         <button
@@ -75,7 +75,7 @@ export default function HeroSlider() {
                         />
                     ))}
                 </div>
-            )}
+            ) : null}
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Settings, Heart, Package, MessageCircle, LogOut, LogIn, MapPin, Phone, Edit3, Check, X, Gift, Star, Sun, Moon, Bell, BellOff } from "lucide-react";
@@ -34,13 +34,13 @@ export default function ProfilePage() {
         setEditing(false);
     };
 
-    const menuItems = [
+    const menuItems = useMemo(() => [
         { icon: Package, label: "طلباتي", to: "/my-orders" },
         { icon: Heart, label: "المفضلة", sub: `${count} منتج`, to: "/wishlist" },
         { icon: Gift, label: "نقاط الولاء", sub: `${points} نقطة`, to: "/loyalty" },
         { icon: Package, label: "تتبع الطلب", to: "/order-tracking" },
         { icon: MessageCircle, label: "تواصل معنا", to: "https://wa.me/201550525643", external: true },
-    ];
+    ], [count, points]);
 
     if (!customer) {
         return (
@@ -83,11 +83,11 @@ export default function ProfilePage() {
                     <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Phone className="h-3 w-3" /> {customer.phone}
                     </p>
-                    {points > 0 && (
+                    {points > 0 ? (
                         <Link to="/loyalty" className="mt-2 flex items-center gap-1 text-xs font-bold text-amber-500">
                             <Star className="h-3 w-3" fill="currentColor" /> {points} نقطة ولاء
                         </Link>
-                    )}
+                    ) : null}
                 </motion.div>
 
                 <div className="px-4 py-4 border-b border-border">
@@ -140,7 +140,7 @@ export default function ProfilePage() {
                                 <div className="absolute left-0 inset-y-0 w-1 bg-[#389a9c] scale-y-0 group-hover:scale-y-100 transition-transform origin-center" />
                                 <Icon className="h-5 w-5 text-muted-foreground group-hover:text-[#389a9c] transition-colors" />
                                 <span className="flex-1 transition-transform">{label}</span>
-                                {sub && <span className="text-xs text-muted-foreground bg-secondary px-2 rounded-full">{sub}</span>}
+                                {sub ? <span className="text-xs text-muted-foreground bg-secondary px-2 rounded-full">{sub}</span> : null}
                             </motion.div>
                         );
                         if (external) return <a key={label} href={to!} target="_blank" rel="noopener noreferrer">{inner}</a>;
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                     </motion.button>
 
                     {/* Push Notifications toggle */}
-                    {pushSupported && (
+                    {pushSupported ? (
                         <motion.button
                             initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
                             whileTap={{ scale: 0.98 }}
@@ -181,7 +181,7 @@ export default function ProfilePage() {
                                 {pushSubscribed ? "مفعّل" : "معطّل"}
                             </span>
                         </motion.button>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </PageTransition>

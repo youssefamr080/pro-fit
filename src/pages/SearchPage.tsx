@@ -78,17 +78,17 @@ export default function SearchPage() {
                         <div className="relative flex-1">
                             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <input autoFocus value={query} onChange={(e) => handleChange(e.target.value)} placeholder="ابحث عن منتج، قسم..." className="w-full bg-secondary text-sm font-cairo pr-9 pl-8 py-2 outline-none" />
-                            {query && <button onClick={() => handleChange("")} className="absolute left-2 top-1/2 -translate-y-1/2"><X className="h-4 w-4 text-muted-foreground" /></button>}
+                            {query ? <button onClick={() => handleChange("")} className="absolute left-2 top-1/2 -translate-y-1/2"><X className="h-4 w-4 text-muted-foreground" /></button> : null}
                         </div>
                         <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowFilters(!showFilters)} className="relative flex-shrink-0 p-2 bg-secondary border border-border">
                             <SlidersHorizontal className="h-4 w-4" />
-                            {activeFiltersCount > 0 && <span className="absolute -top-1 -left-1 w-4 h-4 bg-foreground text-background text-[9px] font-bold rounded-full flex items-center justify-center">{activeFiltersCount}</span>}
+                            {activeFiltersCount > 0 ? <span className="absolute -top-1 -left-1 w-4 h-4 bg-foreground text-background text-[9px] font-bold rounded-full flex items-center justify-center">{activeFiltersCount}</span> : null}
                         </motion.button>
                     </div>
                 </div>
 
                 <AnimatePresence>
-                    {showFilters && (
+                    {showFilters ? (
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden border-b border-border">
                             <div className="px-4 py-4 space-y-4">
                                 <div>
@@ -122,10 +122,10 @@ export default function SearchPage() {
                                         {SORT_OPTIONS.map(s => <button key={s.id} onClick={() => setSortBy(s.id)} className={`px-3 py-1.5 text-xs font-bold border transition-colors ${sortBy === s.id ? "bg-foreground text-background border-foreground" : "border-border"}`}>{s.label}</button>)}
                                     </div>
                                 </div>
-                                {activeFiltersCount > 0 && <button onClick={clearFilters} className="text-xs font-bold text-destructive">مسح كل الفلاتر</button>}
+                                {activeFiltersCount > 0 ? <button onClick={clearFilters} className="text-xs font-bold text-destructive">مسح كل الفلاتر</button> : null}
                             </div>
                         </motion.div>
-                    )}
+                    ) : null}
                 </AnimatePresence>
 
                 <AnimatePresence mode="wait">

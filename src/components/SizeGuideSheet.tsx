@@ -15,6 +15,8 @@ interface Props {
 interface SizeField { id: string; key: string; label: string; unit: string; }
 interface SizeGuideRow { size: string; field_key: string; value: string; }
 
+const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
+
 function useCategorySizeFields(categoryName: string) {
     const { data: categories = [] } = useCategories();
     const catId = categories.find(c => c.name === categoryName)?.id;
@@ -71,10 +73,9 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
             map[row.size][row.field_key] = row.value;
         }
         // Sort sizes in standard order
-        const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
         const sorted = Array.from(sizeSet).sort((a, b) => {
-            const ia = sizeOrder.indexOf(a);
-            const ib = sizeOrder.indexOf(b);
+            const ia = SIZE_ORDER.indexOf(a);
+            const ib = SIZE_ORDER.indexOf(b);
             if (ia === -1 && ib === -1) return a.localeCompare(b);
             if (ia === -1) return 1;
             if (ib === -1) return -1;
@@ -147,7 +148,7 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
                 <div className="overflow-y-auto px-4 pb-8" style={{ maxHeight: "60vh" }}>
                     <AnimatePresence mode="wait">
                         {/* ── Table Tab ── */}
-                        {activeTab === "table" && (
+                        {activeTab === "table" ? (
                             <motion.div
                                 key="table"
                                 initial={{ opacity: 0, y: 10 }}
@@ -188,17 +189,17 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
                                                             <td className="p-3 text-sm font-black text-right sticky left-0 bg-background">
                                                                 <div className="flex items-center gap-1.5">
                                                                     {size}
-                                                                    {isSelected && (
+                                                                    {isSelected ? (
                                                                         <span className="text-[9px] bg-foreground text-background px-1.5 py-0.5 rounded-full">
                                                                             محدد
                                                                         </span>
-                                                                    )}
-                                                                    {isRecommended && !isSelected && (
+                                                                    ) : null}
+                                                                    {isRecommended && !isSelected ? (
                                                                         <span className="text-[9px] bg-green-600 text-white px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
                                                                             <Sparkles className="h-2.5 w-2.5" />
                                                                             مقترح
                                                                         </span>
-                                                                    )}
+                                                                    ) : null}
                                                                 </div>
                                                             </td>
                                                             {fields.map((m) => (
@@ -219,10 +220,10 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
                                     </div>
                                 )}
                             </motion.div>
-                        )}
+                        ) : null}
 
                         {/* ── Calculator Tab ── */}
-                        {activeTab === "calculator" && (
+                        {activeTab === "calculator" ? (
                             <motion.div
                                 key="calculator"
                                 initial={{ opacity: 0, y: 10 }}
@@ -268,7 +269,7 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
 
                                 {/* Result */}
                                 <AnimatePresence>
-                                    {recommended && (
+                                    {recommended ? (
                                         <motion.div
                                             initial={{ opacity: 0, scale: 0.9 }}
                                             animate={{ opacity: 1, scale: 1 }}
@@ -291,19 +292,19 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
                                                 بناءً على وزنك ({weight} كجم) وطولك ({height} سم)
                                             </p>
                                         </motion.div>
-                                    )}
+                                    ) : null}
                                 </AnimatePresence>
 
-                                {!recommended && weight && height && (
+                                {!recommended && weight && height ? (
                                     <p className="text-xs text-muted-foreground text-center py-4">
                                         لم نجد مقاس مناسب — جرب تعدّل الأرقام
                                     </p>
-                                )}
+                                ) : null}
                             </motion.div>
-                        )}
+                        ) : null}
 
                         {/* ── How to Measure Tab ── */}
-                        {activeTab === "howto" && (
+                        {activeTab === "howto" ? (
                             <motion.div
                                 key="howto"
                                 initial={{ opacity: 0, y: 10 }}
@@ -341,7 +342,7 @@ export default function SizeGuideSheet({ category, productId, selectedSize }: Pr
                                     </p>
                                 )}
                             </motion.div>
-                        )}
+                        ) : null}
                     </AnimatePresence>
                 </div>
             </DrawerContent>

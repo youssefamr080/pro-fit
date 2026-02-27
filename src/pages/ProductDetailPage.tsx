@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback, lazy, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProductById, useProductsByCategory } from "@/hooks/useProducts";
@@ -14,14 +14,15 @@ import { ChevronRight, Heart, Share2, ArrowLeftRight, AlertTriangle, ZoomIn, Zap
 import { toast } from "@/hooks/use-toast";
 import { MiniCountdown } from "@/components/home/FlashSaleSection";
 import PageTransition from "@/components/PageTransition";
-import ProductReviews, { useProductRating } from "@/components/ProductReviews";
 import SizeGuideSheet from "@/components/SizeGuideSheet";
 import ProductCard from "@/components/ProductCard";
 import LazyImage from "@/components/LazyImage";
 import SEO from "@/components/SEO";
-import ImageLightbox from "@/components/ImageLightbox";
 import type { ProductVariant } from "@/types/product";
 import { ProductDetailSkeleton } from "@/components/PageSkeletons";
+
+const ProductReviews = lazy(() => import("@/components/ProductReviews"));
+const ImageLightbox = lazy(() => import("@/components/ImageLightbox"));
 
 export default function ProductDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -31,9 +32,11 @@ export default function ProductDetailPage() {
     const { data: categoryProducts = [] } = useProductsByCategory(product?.category || "");
 
     // Dedup logic: similar = same category (exclude self), recommended = exclude both self AND similar
-    const similarProducts = categoryProducts.filter((p) => p.id !== id).slice(0, 8);
-    const similarIds = new Set(similarProducts.map((p) => p.id));
-    const dedupedRecommended = recommended.filter((p) => p.id !== id && !similarIds.has(p.id)).slice(0, 6);
+    const similarProducts = useMemo(() => categoryProducts.filter((p) => p.id !== id).slice(0, 8), [categoryProducts, id]);
+    const dedupedRecommended = useMemo(() => {
+        const similarIds = new Set(similarProducts.map((p) => p.id));
+        return recommended.filter((p) => p.id !== id && !similarIds.has(p.id)).slice(0, 6);
+    }, [recommended, similarProducts, id]);
     const { addItem } = useCart();
     const flashSaleMap = useFlashSaleMap();
     const flashSale = product ? flashSaleMap.get(product.id) : undefined;
@@ -62,6 +65,45 @@ export default function ProductDetailPage() {
         }
     }, [product?.id, customer?.id]);
 
+    const activeColorHex = useMemo(() => {
+        if (!product?.variants) return '#389a9c';
+        if (selectedColor) {
+            return product.variants.find((v: ProductVariant) => v.color === selectedColor)?.colorHex;
+        }
+        return product.variants[0]?.colorHex || '#389a9c';
+    }, [selectedColor, product?.variants]);
+
+    const uniqueColors = useMemo(() => {
+        if (!product?.variants) return [];
+        return Array.from(new Map(product.variants.map((v: ProductVariant) => [v.color, v])).values());
+    }, [product?.variants]);
+
+    const uniqueSizes = useMemo(() => {
+        if (!product?.variants) return [];
+        return Array.from(new Set(product.variants.map((v: ProductVariant) => v.size)));
+    }, [product?.variants]);
+
+    // Get stock for a specific size+color combination
+    const getVariantStock = useCallback((size: string, color: string): number => {
+        if (!product?.variants) return 0;
+        const v = product.variants.find((v: ProductVariant) => v.size === size && v.color === color);
+        return v?.stock ?? 0;
+    }, [product?.variants]);
+
+    // Check if a SIZE has any stock (for the selected color, or any color if none selected)
+    const isSizeAvailable = useCallback((size: string): boolean => {
+        if (!product?.variants) return false;
+        if (selectedColor) return getVariantStock(size, selectedColor) > 0;
+        return product.variants.some((v: ProductVariant) => v.size === size && (v.stock ?? 0) > 0);
+    }, [product?.variants, selectedColor, getVariantStock]);
+
+    // Check if a COLOR has any stock (for the selected size, or any size if none selected)
+    const isColorAvailable = useCallback((color: string): boolean => {
+        if (!product?.variants) return false;
+        if (selectedSize) return getVariantStock(selectedSize, color) > 0;
+        return product.variants.some((v: ProductVariant) => v.color === color && (v.stock ?? 0) > 0);
+    }, [product?.variants, selectedSize, getVariantStock]);
+
     if (isLoading) {
         return <ProductDetailSkeleton />;
     }
@@ -70,36 +112,16 @@ export default function ProductDetailPage() {
         return <div className="p-8 text-center font-cairo">المنتج غير موجود</div>;
     }
 
-    const wished = isWished(product.id);
-    const uniqueColors = Array.from(new Map(product.variants.map((v: ProductVariant) => [v.color, v])).values());
-    const uniqueSizes = Array.from(new Set(product.variants.map((v: ProductVariant) => v.size)));
-    const isOutOfStock = product.stock <= 0;
+    const wished = product ? isWished(product.id) : false;
+    const isOutOfStock = (product?.stock ?? 0) <= 0;
 
     // Selected variant and its stock
-    const selectedVariant = product.variants.find(
+    const selectedVariant = product?.variants?.find(
         (v: ProductVariant) => v.size === selectedSize && v.color === selectedColor
     );
     const variantStock = selectedVariant?.stock ?? null;
-    const variantInStock = selectedVariant ? (variantStock ?? product.stock) > 0 : true;
+    const variantInStock = selectedVariant ? (variantStock ?? product?.stock ?? 0) > 0 : true;
     const isVariantLowStock = variantStock !== null && variantStock > 0 && variantStock <= 5;
-
-    // Get stock for a specific size+color combination
-    const getVariantStock = (size: string, color: string): number => {
-        const v = product.variants.find((v: ProductVariant) => v.size === size && v.color === color);
-        return v?.stock ?? 0;
-    };
-
-    // Check if a SIZE has any stock (for the selected color, or any color if none selected)
-    const isSizeAvailable = (size: string): boolean => {
-        if (selectedColor) return getVariantStock(size, selectedColor) > 0;
-        return product.variants.some((v: ProductVariant) => v.size === size && (v.stock ?? 0) > 0);
-    };
-
-    // Check if a COLOR has any stock (for the selected size, or any size if none selected)
-    const isColorAvailable = (color: string): boolean => {
-        if (selectedSize) return getVariantStock(selectedSize, color) > 0;
-        return product.variants.some((v: ProductVariant) => v.color === color && (v.stock ?? 0) > 0);
-    };
 
     const handleTouchStart = (e: React.TouchEvent) => {
         touchStartX.current = e.touches[0].clientX;
@@ -311,7 +333,7 @@ export default function ProductDetailPage() {
                     <div>
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm font-bold font-cairo">المقاس</p>
-                            <SizeGuideSheet category={product.category} productId={product.id} selectedSize={selectedSize} />
+                            <SizeGuideSheet category={product.category} selectedSize={selectedSize} />
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {uniqueSizes.map((s: string) => {
@@ -428,7 +450,7 @@ export default function ProductDetailPage() {
                     )}
                 </motion.div>
 
-                <div className="fixed bottom-14 inset-x-0 z-40 bg-background/85 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70 border-t border-border p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.2)] max-w-4xl mx-auto">
+                <div className="fixed bottom-14 inset-x-0 z-40 bg-background border-t border-border p-4 max-w-4xl mx-auto">
                     <motion.button onClick={handleAdd} disabled={isOutOfStock || !variantInStock}
                         animate={addedPulse ? { scale: [1, 0.96, 1] } : {}} transition={{ duration: 0.3 }} whileTap={{ scale: 0.97 }}
                         className={`w-full py-3.5 rounded-xl font-cairo font-bold text-sm disabled:opacity-40 transition-all ${addedPulse ? "bg-green-600 text-white" : isOutOfStock ? "bg-red-600/50 text-white" : "bg-foreground text-background"}`}>
